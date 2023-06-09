@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  blog_db:
+    image: postgres:latest
+    container_name: blog_db
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - blog_db_data:/var/lib/postgresql/data
+    ports:
+      - "7432:5432"
+
+volumes:
+    blog_db_data:

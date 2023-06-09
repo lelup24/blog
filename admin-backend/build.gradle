@@ -1,0 +1,110 @@
+buildscript {
+    dependencies {
+        classpath 'org.postgresql:postgresql:42.5.4'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.flywaydb.flyway' version '9.19.3'
+    id 'nu.studer.jooq' version '8.2.1'
+}
+
+group = 'de.blog'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+import org.jooq.codegen.GenerationTool
+import org.jooq.meta.jaxb.*
+
+tasks.register('jooqGenerate') {
+    doLast {
+        GenerationTool.generate(new Configuration()
+                .withJdbc(new Jdbc()
+                        .withDriver('org.postgresql.Driver')
+                        .withUrl('jdbc:postgresql://localhost:7432/blog')
+                        .withUser('postgres')
+                        .withPassword('postgres'))
+                .withGenerator(new Generator()
+                        .withDatabase(new Database()
+                                .withSchemata(
+                                        new SchemaMappingType().withInputSchema('public'))
+                                .withExcludes('flyway_schema_history')
+                        )
+                        .withGenerate(new Generate()
+                                .withTables(true)
+                                .withPojos(true)
+                                .withRecords(true)
+                                .withDaos(true)
+                                .withFluentSetters(true)
+                                .withJavaTimeTypes(true)
+                                .withSpringAnnotations(true)
+                                .withValidationAnnotations(true)
+                        )
+/*                        .withStrategy(new Strategy()
+                                .withName(null)
+                                .withMatchers(new Matchers()
+                                        .withTables(new MatchersTableType()
+                                                .withExpression('^(kunde|' +
+                                                        'angebot|' +
+                                                        'rechnung)$')
+                                                .withRecordImplements('de.kundenverwaltung.data.IAuditable')
+                                        )
+                                )
+                        )*/
+                        .withTarget(new Target()
+                                .withPackageName('de.blog.data')
+                                .withDirectory(projectDir.toString() + '/src/main/java/generated/data')
+                                .withEncoding('UTF-8')
+                        )
+                )
+        )
+    }
+}
+
+
+flyway {
+    driver = 'org.postgresql.Driver'
+    url = 'jdbc:postgresql://localhost:7432/blog'
+    user = 'postgres'
+    password = 'postgres'
+    schemas = ['public']
+    skipDefaultCallbacks = false
+    cleanDisabled = false
+    locations = ['classpath:db/migration']
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/main/java/generated/data']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}

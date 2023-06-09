@@ -1,0 +1,4 @@
+rootProject.name = 'blog'
+include 'blog-app'
+include 'admin-backend'
+include 'admin-frontend'
