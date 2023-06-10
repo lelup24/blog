@@ -4,22 +4,30 @@ import { DashboardService } from './dashboard.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { AdminTheme, ThemeService } from '../common/theme.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [DashboardService],
+  providers: [DashboardService, ThemeService],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   dashboardService = inject(DashboardService);
   authenticationService = inject(AuthenticationService);
+  themeService = inject(ThemeService);
+  activeTheme!: AdminTheme;
+
   remainingTimeInSeconds = 0;
   interval!: any;
 
   ngOnInit(): void {
+    this.themeService.activeTheme$.subscribe(
+      (theme) => (this.activeTheme = theme)
+    );
     this.dashboardService.fetchUsers().subscribe((response) => {
       console.log(response);
     });
@@ -69,5 +77,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     clearInterval(this.interval);
+  }
+
+  setTheme(theme: AdminTheme) {
+    this.themeService.setTheme(theme);
   }
 }

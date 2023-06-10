@@ -1,10 +1,26 @@
-<p>dashboard works!</p>
-
 <div class="refresh-token">
   <button mat-icon-button (click)="refresh()">
     <mat-icon>refresh</mat-icon>
   </button>
-  {{ minutes }}:{{ seconds }}
+  <span>{{ minutes }}:{{ seconds }}</span>
+
+  <button mat-button [matMenuTriggerFor]="menu">Themes</button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      (click)="setTheme('orange')"
+      [disabled]="'orange' === activeTheme"
+    >
+      Orange
+    </button>
+    <button
+      mat-menu-item
+      (click)="setTheme('blue')"
+      [disabled]="'blue' === activeTheme"
+    >
+      Blue
+    </button>
+  </mat-menu>
 </div>
 
-<button mat-raised-button (click)="logout()">Logout</button>
+<button mat-raised-button color="primary" (click)="logout()">Logout</button>
