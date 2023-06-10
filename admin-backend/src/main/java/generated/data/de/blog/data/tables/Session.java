@@ -16,11 +16,11 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function6;
+import org.jooq.Function8;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row6;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -74,6 +74,16 @@ public class Session extends TableImpl<SessionRecord> {
     public final TableField<SessionRecord, Boolean> REVOKED = createField(DSL.name("revoked"), SQLDataType.BOOLEAN, this, "");
 
     /**
+     * The column <code>public.session.token</code>.
+     */
+    public final TableField<SessionRecord, String> TOKEN = createField(DSL.name("token"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.session.expires_at</code>.
+     */
+    public final TableField<SessionRecord, LocalDateTime> EXPIRES_AT = createField(DSL.name("expires_at"), SQLDataType.LOCALDATETIME(6), this, "");
+
+    /**
      * The column <code>public.session.created_at</code>.
      */
     public final TableField<SessionRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6), this, "");
@@ -124,6 +134,11 @@ public class Session extends TableImpl<SessionRecord> {
     @Override
     public UniqueKey<SessionRecord> getPrimaryKey() {
         return Keys.SESSION_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<SessionRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.SESSION_TOKEN_KEY);
     }
 
     @Override
@@ -183,18 +198,18 @@ public class Session extends TableImpl<SessionRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<UUID, UUID, String, Boolean, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row8<UUID, UUID, String, Boolean, String, LocalDateTime, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function6<? super UUID, ? super UUID, ? super String, ? super Boolean, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function8<? super UUID, ? super UUID, ? super String, ? super Boolean, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -202,7 +217,7 @@ public class Session extends TableImpl<SessionRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super UUID, ? super String, ? super Boolean, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super UUID, ? super UUID, ? super String, ? super Boolean, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

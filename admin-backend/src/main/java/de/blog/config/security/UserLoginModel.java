@@ -1,4 +1,4 @@
-package de.blog.config;
+package de.blog.config.security;
 
 import java.util.Objects;
 

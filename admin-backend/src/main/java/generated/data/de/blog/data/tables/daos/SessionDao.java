@@ -120,6 +120,50 @@ public class SessionDao extends DAOImpl<SessionRecord, de.blog.data.tables.pojos
     }
 
     /**
+     * Fetch records that have <code>token BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<de.blog.data.tables.pojos.Session> fetchRangeOfToken(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Session.SESSION.TOKEN, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>token IN (values)</code>
+     */
+    public List<de.blog.data.tables.pojos.Session> fetchByToken(String... values) {
+        return fetch(Session.SESSION.TOKEN, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>token = value</code>
+     */
+    public de.blog.data.tables.pojos.Session fetchOneByToken(String value) {
+        return fetchOne(Session.SESSION.TOKEN, value);
+    }
+
+    /**
+     * Fetch a unique record that has <code>token = value</code>
+     */
+    public Optional<de.blog.data.tables.pojos.Session> fetchOptionalByToken(String value) {
+        return fetchOptional(Session.SESSION.TOKEN, value);
+    }
+
+    /**
+     * Fetch records that have <code>expires_at BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<de.blog.data.tables.pojos.Session> fetchRangeOfExpiresAt(LocalDateTime lowerInclusive, LocalDateTime upperInclusive) {
+        return fetchRange(Session.SESSION.EXPIRES_AT, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>expires_at IN (values)</code>
+     */
+    public List<de.blog.data.tables.pojos.Session> fetchByExpiresAt(LocalDateTime... values) {
+        return fetch(Session.SESSION.EXPIRES_AT, values);
+    }
+
+    /**
      * Fetch records that have <code>created_at BETWEEN lowerInclusive AND
      * upperInclusive</code>
      */

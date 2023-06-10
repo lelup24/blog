@@ -4,7 +4,7 @@ import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { APP_ROUTES } from './app/routes';
 import { AuthenticationService } from './app/authentication/authentication.service';
-import { Tokenstorage } from './app/authentication/tokenstorage';
+import { TokenStorage } from './app/authentication/token-storage.service';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
@@ -24,7 +24,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(BrowserModule, HttpClientModule),
     provideRouter(APP_ROUTES),
     { provide: AuthenticationService },
-    { provide: Tokenstorage },
+    { provide: TokenStorage },
     importProvidersFrom(
       JwtModule.forRoot({
         config: {

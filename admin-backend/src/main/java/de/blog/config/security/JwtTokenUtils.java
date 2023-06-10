@@ -1,4 +1,4 @@
-package de.blog.config;
+package de.blog.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -50,7 +50,7 @@ public class JwtTokenUtils {
 
   public Boolean validate(final String tokenAsString) {
     try {
-      JWT.require(Algorithm.RSA256(publicKey, privateKey)).build().verify(tokenAsString);
+      JWT.require(algorithm).build().verify(tokenAsString);
       return true;
     } catch (Exception e) {
       return false;
@@ -58,7 +58,11 @@ public class JwtTokenUtils {
   }
 
   public String getUsername(final String token) {
-    return JWT.require(Algorithm.RSA256(publicKey, privateKey)).build().verify(token).getSubject();
+    return JWT.require(algorithm).build().verify(token).getSubject();
+  }
+
+  public Date getExpiresAt(String token) {
+    return JWT.require(algorithm).build().verify(token).getExpiresAt();
   }
 
   private void loadKeys() {

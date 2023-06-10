@@ -1,1 +1,10 @@
 <p>dashboard works!</p>
+
+<div class="refresh-token">
+  <button mat-icon-button (click)="refresh()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+  {{ minutes }}:{{ seconds }}
+</div>
+
+<button mat-raised-button (click)="logout()">Logout</button>

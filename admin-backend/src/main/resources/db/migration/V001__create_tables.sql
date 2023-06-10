@@ -59,19 +59,10 @@ create table session
     user_id        uuid,
     remote_address varchar(255),
     revoked        boolean,
+    token          text unique,
+    expires_at     timestamp,
     created_at     timestamp,
     updated_at     timestamp,
     primary key (id),
     foreign key (user_id) references user_entity (id)
-);
-
-create table token
-(
-    id         uuid,
-    session_id uuid,
-    token      text unique,
-    expires_at timestamp,
-    created_at timestamp,
-    primary key (id),
-    foreign key (session_id) references session (id)
 );

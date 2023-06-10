@@ -1,4 +1,4 @@
-package de.blog.config;
+package de.blog.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

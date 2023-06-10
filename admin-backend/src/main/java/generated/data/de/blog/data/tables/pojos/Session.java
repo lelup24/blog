@@ -24,6 +24,8 @@ public class Session implements Serializable {
     private UUID userId;
     private String remoteAddress;
     private Boolean revoked;
+    private String token;
+    private LocalDateTime expiresAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -34,6 +36,8 @@ public class Session implements Serializable {
         this.userId = value.userId;
         this.remoteAddress = value.remoteAddress;
         this.revoked = value.revoked;
+        this.token = value.token;
+        this.expiresAt = value.expiresAt;
         this.createdAt = value.createdAt;
         this.updatedAt = value.updatedAt;
     }
@@ -43,6 +47,8 @@ public class Session implements Serializable {
         UUID userId,
         String remoteAddress,
         Boolean revoked,
+        String token,
+        LocalDateTime expiresAt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
     ) {
@@ -50,6 +56,8 @@ public class Session implements Serializable {
         this.userId = userId;
         this.remoteAddress = remoteAddress;
         this.revoked = revoked;
+        this.token = token;
+        this.expiresAt = expiresAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -117,6 +125,36 @@ public class Session implements Serializable {
     }
 
     /**
+     * Getter for <code>public.session.token</code>.
+     */
+    public String getToken() {
+        return this.token;
+    }
+
+    /**
+     * Setter for <code>public.session.token</code>.
+     */
+    public Session setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
+    /**
+     * Getter for <code>public.session.expires_at</code>.
+     */
+    public LocalDateTime getExpiresAt() {
+        return this.expiresAt;
+    }
+
+    /**
+     * Setter for <code>public.session.expires_at</code>.
+     */
+    public Session setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+        return this;
+    }
+
+    /**
      * Getter for <code>public.session.created_at</code>.
      */
     public LocalDateTime getCreatedAt() {
@@ -179,6 +217,18 @@ public class Session implements Serializable {
         }
         else if (!this.revoked.equals(other.revoked))
             return false;
+        if (this.token == null) {
+            if (other.token != null)
+                return false;
+        }
+        else if (!this.token.equals(other.token))
+            return false;
+        if (this.expiresAt == null) {
+            if (other.expiresAt != null)
+                return false;
+        }
+        else if (!this.expiresAt.equals(other.expiresAt))
+            return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -202,6 +252,8 @@ public class Session implements Serializable {
         result = prime * result + ((this.userId == null) ? 0 : this.userId.hashCode());
         result = prime * result + ((this.remoteAddress == null) ? 0 : this.remoteAddress.hashCode());
         result = prime * result + ((this.revoked == null) ? 0 : this.revoked.hashCode());
+        result = prime * result + ((this.token == null) ? 0 : this.token.hashCode());
+        result = prime * result + ((this.expiresAt == null) ? 0 : this.expiresAt.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
@@ -215,6 +267,8 @@ public class Session implements Serializable {
         sb.append(", ").append(userId);
         sb.append(", ").append(remoteAddress);
         sb.append(", ").append(revoked);
+        sb.append(", ").append(token);
+        sb.append(", ").append(expiresAt);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(updatedAt);
 

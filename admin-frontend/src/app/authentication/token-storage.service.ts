@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class Tokenstorage {
+export class TokenStorage {
   getToken(): string | null {
-    const token = localStorage.getItem('auth-token');
-
-    if (!token) {
-      return null;
-    }
-    return token;
+    return localStorage.getItem('auth-token');
   }
 
   setToken(token: string): void {
     localStorage.setItem('auth-token', token);
+  }
+
+  removeToken(key: string) {
+    localStorage.removeItem(key);
   }
 }

@@ -1,4 +1,4 @@
-package de.blog.config;
+package de.blog.config.security;
 
 import de.blog.data.tables.daos.UserEntityDao;
 import org.springframework.context.annotation.Bean;

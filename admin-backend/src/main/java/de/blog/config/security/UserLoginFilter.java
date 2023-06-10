@@ -1,4 +1,4 @@
-package de.blog.config;
+package de.blog.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.blog.data.tables.daos.UserEntityDao;

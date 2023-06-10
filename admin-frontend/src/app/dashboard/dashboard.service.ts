@@ -7,6 +7,6 @@ export class DashboardService {
   http = inject(HttpClient);
 
   public fetchUsers(): Observable<{ msg: string }> {
-    return this.http.get<{ msg: string }>('/api/v1/user');
+    return this.http.get<{ msg: string }>('/api/v1/users');
   }
 }

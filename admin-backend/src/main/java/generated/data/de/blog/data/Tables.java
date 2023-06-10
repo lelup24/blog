@@ -7,7 +7,6 @@ package de.blog.data;
 import de.blog.data.tables.Post;
 import de.blog.data.tables.Role;
 import de.blog.data.tables.Session;
-import de.blog.data.tables.Token;
 import de.blog.data.tables.UserEntity;
 import de.blog.data.tables.UserRole;
 
@@ -32,11 +31,6 @@ public class Tables {
      * The table <code>public.session</code>.
      */
     public static final Session SESSION = Session.SESSION;
-
-    /**
-     * The table <code>public.token</code>.
-     */
-    public static final Token TOKEN = Token.TOKEN;
 
     /**
      * The table <code>public.user_entity</code>.

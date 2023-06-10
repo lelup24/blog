@@ -7,11 +7,11 @@ import {
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Tokenstorage } from './tokenstorage';
+import { TokenStorage } from './token-storage.service';
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
-  tokenstorage = inject(Tokenstorage);
+  tokenstorage = inject(TokenStorage);
 
   intercept(
     req: HttpRequest<any>,

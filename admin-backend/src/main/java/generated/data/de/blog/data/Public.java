@@ -7,7 +7,6 @@ package de.blog.data;
 import de.blog.data.tables.Post;
 import de.blog.data.tables.Role;
 import de.blog.data.tables.Session;
-import de.blog.data.tables.Token;
 import de.blog.data.tables.UserEntity;
 import de.blog.data.tables.UserRole;
 
@@ -48,11 +47,6 @@ public class Public extends SchemaImpl {
     public final Session SESSION = Session.SESSION;
 
     /**
-     * The table <code>public.token</code>.
-     */
-    public final Token TOKEN = Token.TOKEN;
-
-    /**
      * The table <code>public.user_entity</code>.
      */
     public final UserEntity USER_ENTITY = UserEntity.USER_ENTITY;
@@ -81,7 +75,6 @@ public class Public extends SchemaImpl {
             Post.POST,
             Role.ROLE,
             Session.SESSION,
-            Token.TOKEN,
             UserEntity.USER_ENTITY,
             UserRole.USER_ROLE
         );
