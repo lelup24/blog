@@ -33,3 +33,9 @@ jobs:
       - name: Run Integrationstests
         working-directory: admin-backend
         run: ./gradlew test
+
+      - name: Hochladen der Artefakte
+        uses: actions/upload-artifact@v2
+        with:
+          name: Testergebnisse
+          path: build/reports/tests/test
