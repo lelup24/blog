@@ -1,4 +1,4 @@
-name: Test Pipeline
+name: Admin-Backend
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-22.04
 
     services:
