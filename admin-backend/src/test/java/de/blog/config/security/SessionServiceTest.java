@@ -4,7 +4,7 @@ import static de.blog.config.ClockConfig.DEFAULT_ZONE_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import config.IntegrationsTest;
+import config.IntegrationTest;
 import de.blog.data.tables.daos.SessionDao;
 import de.blog.data.tables.pojos.Session;
 import java.time.Clock;
@@ -17,7 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
-@IntegrationsTest
+@IntegrationTest
 class SessionServiceTest {
 
   private static final String USERNAME = "peter";

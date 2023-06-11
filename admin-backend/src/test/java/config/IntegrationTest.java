@@ -13,6 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = {PostgresInitializer.Initializer.class})
-@ActiveProfiles("integrationstest")
+@ActiveProfiles("integrationtest")
 @ExtendWith({BeforeEachHook.class})
-public @interface IntegrationsTest {}
+public @interface IntegrationTest {}
