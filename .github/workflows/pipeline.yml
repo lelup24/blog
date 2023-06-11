@@ -32,6 +32,9 @@ jobs:
           dockerd-entrypoint.sh &
           sleep 5
 
+      - name: Set execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build with Gradle
         working-directory: admin-backend
         run: ./gradlew build
