@@ -26,10 +26,6 @@ jobs:
         working-directory: admin-backend
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        working-directory: admin-backend
-        run: ./gradlew build
-
       - name: Run Integrationstests
         working-directory: admin-backend
         run: ./gradlew test
