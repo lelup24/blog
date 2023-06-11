@@ -8,6 +8,16 @@ on:
     branches:
       - master
 
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - 7432:5432
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blog
+
 jobs:
   test:
     runs-on: ubuntu-22.04
@@ -25,6 +35,10 @@ jobs:
       - name: Set execute permission for gradlew
         working-directory: admin-backend
         run: chmod +x gradlew
+
+      - name: Build with Gradle
+        working-directory: admin-backend
+        run: ./gradlew build
 
       - name: Run Integrationstests
         working-directory: admin-backend
