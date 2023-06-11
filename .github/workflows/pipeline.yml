@@ -8,19 +8,19 @@ on:
     branches:
       - master
 
-services:
-  postgres:
-    image: postgres:latest
-    ports:
-      - 7432:5432
-    env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: blog
-
 jobs:
   test:
     runs-on: ubuntu-22.04
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 7432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: blog
 
     steps:
       - name: Checkout code
