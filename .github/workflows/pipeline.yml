@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     services:
       docker:
@@ -26,11 +26,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'adopt'
-
-      - name: Start Docker service
-        run: |
-          dockerd-entrypoint.sh &
-          sleep 5
 
       - name: Set execute permission for gradlew
         working-directory: admin-backend
