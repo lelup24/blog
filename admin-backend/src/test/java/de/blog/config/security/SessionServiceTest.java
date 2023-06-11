@@ -18,7 +18,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 @IntegrationTest
-class SessionServiceTest {
+class SessionServiceIntegrationTest {
 
   private static final String USERNAME = "peter";
   private static final String PASSWORD = "1234";
@@ -28,7 +28,7 @@ class SessionServiceTest {
   @MockBean Clock clock;
 
   @Autowired
-  SessionServiceTest(final TestRestTemplate testRestTemplate, final SessionDao sessionDao) {
+  SessionServiceIntegrationTest(final TestRestTemplate testRestTemplate, final SessionDao sessionDao) {
     this.testRestTemplate = testRestTemplate;
     this.sessionDao = sessionDao;
   }
