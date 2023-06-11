@@ -12,11 +12,6 @@ jobs:
   test:
     runs-on: ubuntu-22.04
 
-    services:
-      docker:
-        image: docker:dind
-        options: --privileged
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
