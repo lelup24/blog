@@ -1,0 +1,40 @@
+name: Test Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Start Docker service
+        run: |
+          dockerd-entrypoint.sh &
+          sleep 5
+
+      - name: Build with Gradle
+        working-directory: admin-backend
+        run: ./gradlew build
+
+      - name: Run Integrationstests
+        working-directory: admin-backend
+        run: ./gradlew test
