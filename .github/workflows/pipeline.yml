@@ -33,6 +33,7 @@ jobs:
           sleep 5
 
       - name: Set execute permission for gradlew
+        working-directory: admin-backend
         run: chmod +x gradlew
 
       - name: Build with Gradle
