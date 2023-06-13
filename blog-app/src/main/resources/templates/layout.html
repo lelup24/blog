@@ -1,0 +1,46 @@
+<!DOCTYPE html SYSTEM "https://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-3.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:layout="https://github.com/ultraq/thymeleaf-layout-dialect"
+>
+  <head>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"></title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      th:href="@{/favicon.ico}"
+      href="../static/favicon.ico"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="/css/header.css"
+      media="all"
+      onload="media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/pure.css"
+      media="all"
+      onload="media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="/css/styles.css"
+      media="all"
+      onload="media='all'"
+    />
+  </head>
+
+  <body>
+    <header th:replace="~{fragments/header::header}"></header>
+    <!-- Begin page content -->
+    <main>
+      <div layout:fragment="content">Fake content</div>
+    </main>
+
+    <div th:replace="~{fragments/footer::footer}"></div>
+  </body>
+</html>

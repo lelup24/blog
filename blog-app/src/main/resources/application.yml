@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:7432/blog
+    username: postgres
+    password: postgres
+  session:
+    jdbc:
+      cleanup-cron: 0 0 1 * * *
+      table-name: user_session
+      initialize-schema: always
+
+server:
+  port: 8081

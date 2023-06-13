@@ -1,0 +1,20 @@
+<header th:fragment="header">
+  <nav>
+    <div th:fragment="login" sec:authorize="!isAuthenticated()">
+      <a id="login-btn" class="pure-button button-secondary" th:href="@{/login}"
+        >Sign in</a
+      >
+    </div>
+    <div class="user-name" sec:authorize="isAuthenticated()">
+      <span th:text="${currentUserName}"></span>
+      <span th:text="${#authentication.name}"></span>
+      <form th:action="@{/logout}" method="post">
+        <input
+          class="pure-button button-secondary"
+          type="submit"
+          value="Log out"
+        />
+      </form>
+    </div>
+  </nav>
+</header>

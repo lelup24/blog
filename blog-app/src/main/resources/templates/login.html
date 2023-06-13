@@ -1,0 +1,55 @@
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:layout="https://github.com/ultraq/thymeleaf-layout-dialect"
+  layout:decorate="~{layout}"
+>
+  <head>
+    <title>Login</title>
+  </head>
+  <form layout:fragment="content" th:action="@{/authenticate}" method="post">
+    <!-- Place for messages: error, alert etc ... -->
+    <div>
+      <div>
+        <div>
+          <div th:if="${param.error != null}">
+            Invalid username and password.
+          </div>
+
+          <div th:if="${param.logout != null}">You have been logged out.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 25px">
+      <label for="username">Username</label>
+      <input id="username" type="text" name="username" />
+    </div>
+
+    <div style="margin-bottom: 25px">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" />
+    </div>
+    <div>
+      <label>
+        <input id="remember-me" name="remember-me" type="checkbox" /> Angemeldet
+        bleiben
+      </label>
+    </div>
+
+    <div style="margin-top: 10px">
+      <div>
+        <button type="submit" class="button-success pure-button">Login</button>
+      </div>
+    </div>
+    <div>
+      <a
+        th:href="@{/register/registrationform}"
+        class="btn btn-primary"
+        role="button"
+        aria-pressed="true"
+      >
+        Registration
+      </a>
+    </div>
+  </form>
+</html>

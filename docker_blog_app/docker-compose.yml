@@ -11,6 +11,14 @@ services:
       - blog_db_data:/var/lib/postgresql/data
     ports:
       - "7432:5432"
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      REDIS_PASSWORD: redis
+      REDIS_PORT_NUMBER: 7000
+    ports:
+      - "7000:7000"
+
 
 volumes:
-    blog_db_data:
+  blog_db_data:

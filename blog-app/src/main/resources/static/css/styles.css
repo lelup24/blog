@@ -1,0 +1,66 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 1rem;
+    height: calc(100vh - 5rem);
+}
+
+.button-success,
+.button-error,
+.button-warning,
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+    background: rgb(28, 184, 65);
+    /* this is a green */
+}
+
+.button-error {
+    background: rgb(202, 60, 60);
+    /* this is a maroon */
+}
+
+.button-warning {
+    background: rgb(223, 117, 20);
+    /* this is an orange */
+}
+
+.button-secondary {
+    background: rgb(66, 184, 221);
+    /* this is a light blue */
+}
+
+dialog {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+    color: black;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 10px;
+}
+
+dialog[open] {
+    display: flex;
+}
+
+/*dialog button {*/
+/*    background-color: blue;*/
+/*    color: white;*/
+/*    padding: 5px 10px;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*dialog button:hover {*/
+/*    background-color: darkblue;*/
+/*}*/
