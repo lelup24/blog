@@ -57,11 +57,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         new UsernamePasswordAuthenticationToken(
             userDetails.getUsername(), null, userDetails.getAuthorities());
 
-    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
     String refreshedToken = jwtTokenUtils.createToken(authenticationToken);
+
+    // selber Seed?
+    while (refreshedToken.equals(token)) {
+      refreshedToken = jwtTokenUtils.createToken(authenticationToken);
+    }
 
     if (!sessionService.validate(token, request.getRemoteAddr(), refreshedToken)) {
       filterChain.doFilter(request, response);
@@ -69,6 +70,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     response.setHeader("auth-token", refreshedToken);
+
+    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
     filterChain.doFilter(request, response);
   }

@@ -28,7 +28,8 @@ class SessionServiceIntegrationTest {
   @MockBean Clock clock;
 
   @Autowired
-  SessionServiceIntegrationTest(final TestRestTemplate testRestTemplate, final SessionDao sessionDao) {
+  SessionServiceIntegrationTest(
+      final TestRestTemplate testRestTemplate, final SessionDao sessionDao) {
     this.testRestTemplate = testRestTemplate;
     this.sessionDao = sessionDao;
   }
@@ -59,6 +60,38 @@ class SessionServiceIntegrationTest {
   }
 
   @Test
+  void same_token_403() {
+    // init
+    UserLoginModel userLoginModel =
+        new UserLoginModel().setUsername(USERNAME).setPassword(PASSWORD);
+    HttpEntity<UserLoginModel> request = new HttpEntity<>(userLoginModel);
+
+    ResponseEntity<Void> response =
+        testRestTemplate.exchange("/api/login", HttpMethod.POST, request, Void.class);
+
+    String token = response.getHeaders().getFirst("auth-token");
+
+    // run
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+    HttpEntity<Object> refreshRequest = new HttpEntity<>(null, httpHeaders);
+
+    ResponseEntity<Void> refreshResponse_1 =
+        testRestTemplate.exchange(
+            "/api/v1/users/refresh", HttpMethod.POST, refreshRequest, Void.class);
+
+
+    ResponseEntity<String> refreshResponse_2 =
+        testRestTemplate.exchange(
+            "/api/v1/users/refresh", HttpMethod.GET, refreshRequest, String.class);
+
+    // assert
+    assertThat(refreshResponse_1.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(refreshResponse_2.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
   void is_session_expired() {
     // init
     UserLoginModel userLoginModel =
@@ -70,10 +103,9 @@ class SessionServiceIntegrationTest {
 
     String token = response.getHeaders().getFirst("auth-token");
 
-
     // run
     HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " +  token);
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
     HttpEntity<Object> refreshRequest = new HttpEntity<>(null, httpHeaders);
 
