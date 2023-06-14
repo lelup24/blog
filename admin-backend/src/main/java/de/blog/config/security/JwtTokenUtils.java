@@ -44,7 +44,7 @@ public class JwtTokenUtils {
         .withIssuer("blog-backend")
         .withClaim("roles", roles)
         .withIssuedAt(new Date())
-        .withExpiresAt(new Date(new Date().getTime() + 1000000))
+        .withExpiresAt(new Date(new Date().getTime() + 1800000))
         .sign(algorithm);
   }
 

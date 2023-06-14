@@ -6,16 +6,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { AdminTheme, ThemeService } from '../common/theme.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    RouterOutlet,
+  ],
+  templateUrl: './dashboard-router.component.html',
+  styleUrls: ['./dashboard-router.component.scss'],
   providers: [DashboardService, ThemeService],
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardRouter implements OnInit, OnDestroy {
   dashboardService = inject(DashboardService);
   authenticationService = inject(AuthenticationService);
   themeService = inject(ThemeService);

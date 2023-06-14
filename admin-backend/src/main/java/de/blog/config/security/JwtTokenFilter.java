@@ -69,10 +69,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       return;
     }
 
-    response.setHeader("auth-token", refreshedToken);
-
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+    response.setHeader("auth-token", refreshedToken);
 
     filterChain.doFilter(request, response);
   }

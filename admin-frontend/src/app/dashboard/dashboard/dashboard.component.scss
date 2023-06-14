@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  mat-card {
+    min-width: 15rem;
+    max-width: 20rem;
+    min-height: 15rem;
+
+    mat-card-content {
+      height: 100%;
+    }
+  }
+}

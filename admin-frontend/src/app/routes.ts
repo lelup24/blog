@@ -30,9 +30,7 @@ export const APP_ROUTES: Routes = [
     data: {
       roles: ['ADMIN'],
     },
-    loadComponent: () =>
-      import('./dashboard/dashboard.component').then(
-        (c) => c.DashboardComponent
-      ),
+    loadChildren: () =>
+      import('./dashboard/dashboard.routes').then((r) => r.DASHBOARD_ROUTES),
   },
 ];

@@ -9,5 +9,9 @@ spring:
       table-name: user_session
       initialize-schema: always
 
+  devtools:
+    livereload:
+      port: 35730
+
 server:
   port: 8081
