@@ -36,7 +36,6 @@ public class SessionService {
     this.currentUser = currentUser;
   }
 
-  @Transactional
   public void setSession(final String token, final String remoteAddr) {
 
     final UserEntity userEntity =
@@ -65,8 +64,7 @@ public class SessionService {
     sessionDao.insert(session);
   }
 
-  @Transactional
-  public void updateSession(String oldToken, String refreshedToken) {
+  private void updateSession(String oldToken, String refreshedToken) {
 
     Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(oldToken);
 
@@ -93,7 +91,7 @@ public class SessionService {
   }
 
   @Transactional
-  public boolean validate(String token, String remoteAddr) {
+  public boolean validate(String token, String remoteAddr, final String refreshedToken) {
     Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(token);
 
     if (sessionOptional.isEmpty()) {
@@ -127,10 +125,10 @@ public class SessionService {
       return false;
     }
 
+    updateSession(token, refreshedToken);
     return true;
   }
 
-  @Transactional
   public void removeSessions() {
     final List<Session> sessions = sessionDao.fetchByUserId(currentUser.getId());
     sessionDao.delete(sessions);

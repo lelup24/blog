@@ -20,7 +20,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   private final JwtTokenUtils jwtTokenUtils;
   private final SessionService sessionService;
 
-  public JwtTokenFilter(final SecurityUserService userService, final JwtTokenUtils jwtTokenUtils, final SessionService sessionService) {
+  public JwtTokenFilter(
+      final SecurityUserService userService,
+      final JwtTokenUtils jwtTokenUtils,
+      final SessionService sessionService) {
     this.userService = userService;
     this.jwtTokenUtils = jwtTokenUtils;
     this.sessionService = sessionService;
@@ -47,12 +50,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       return;
     }
 
-    if (!sessionService.validate(token, request.getRemoteAddr())) {
-        filterChain.doFilter(request, response);
-        return;
-    }
-
-    final UserDetails userDetails = userService.loadUserByUsername(jwtTokenUtils.getUsername(token));
+    final UserDetails userDetails =
+        userService.loadUserByUsername(jwtTokenUtils.getUsername(token));
 
     final UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(
@@ -64,11 +63,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     String refreshedToken = jwtTokenUtils.createToken(authenticationToken);
 
-    sessionService.updateSession(token, refreshedToken);
+    if (!sessionService.validate(token, request.getRemoteAddr(), refreshedToken)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
-    response.setHeader("auth-token",  refreshedToken);
+    response.setHeader("auth-token", refreshedToken);
 
     filterChain.doFilter(request, response);
-
   }
 }

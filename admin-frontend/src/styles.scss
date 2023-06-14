@@ -35,9 +35,49 @@ $admin-primary: (
   ),
 );
 
+.material-icons {
+  font-family: "Material Icons", serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
 $admin-frontend-primary: mat.define-palette($admin-primary);
 $admin-frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $admin-frontend-warn: mat.define-palette(mat.$red-palette);
+
+$my-custom-level: mat.define-typography-level(
+  $font-family: Roboto,
+  $font-weight: 400,
+  $font-size: 1rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$typography: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+  $body-1: mat.define-typography-level(14px),
+  $body-2: mat.define-typography-level(14px),
+  $button: mat.define-typography-level(14px),
+);
 
 $admin-frontend-theme: mat.define-light-theme(
   (
@@ -46,9 +86,11 @@ $admin-frontend-theme: mat.define-light-theme(
       accent: $admin-frontend-accent,
       warn: $admin-frontend-warn,
     ),
+    typographie: $typography,
   )
 );
 
+@include mat.all-component-typographies($typography);
 @include mat.all-component-themes($admin-frontend-theme);
 
 html,
