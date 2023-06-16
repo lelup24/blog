@@ -9,4 +9,8 @@ export class DashboardService {
   public fetchUsers(): Observable<{ msg: string }> {
     return this.http.get<{ msg: string }>('/api/v1/users');
   }
+
+  public fetchUsers2(): Observable<{ msg: string }> {
+    return this.http.get<{ msg: string }>('/api/v1/users/2');
+  }
 }

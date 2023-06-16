@@ -17,39 +17,68 @@ export class AuthenticationService {
       .post<void>('/api/login', { username, password }, { observe: 'response' })
       .pipe(take(1))
       .subscribe((response: HttpResponse<void>) => {
-        const token = response.headers.get('auth-token');
+        const accessToken = response.headers.get('access-token');
 
-        if (token === null) {
+        if (accessToken === null) {
           throw new Error('Token is null');
         }
 
-        this.tokenStorage.setToken(token);
+        this.tokenStorage.setToken('access-token', accessToken);
+
+        const refreshToken = response.headers.get('refresh-token');
+
+        if (refreshToken === null) {
+          throw new Error('Token is null');
+        }
+
+        this.tokenStorage.setToken('refresh-token', refreshToken);
+
         this.router.navigate(['dashboard']).then();
       });
   }
 
   logout(): void {
     this.http
-      .post<void>('/api/v1/users/logout', {})
+      .post<void>('/api/authentication/logout', {})
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this.tokenStorage.removeToken('auth-token');
+          this.tokenStorage.removeToken('access-token');
+          this.tokenStorage.removeToken('refresh-token');
           this.router.navigate(['']).then();
         },
         error: () => {
-          this.tokenStorage.removeToken('auth-token');
+          this.tokenStorage.removeToken('access-token');
+          this.tokenStorage.removeToken('refresh-token');
           this.router.navigate(['']).then();
         },
       });
   }
 
   refresh(): void {
-    this.http.post<void>('/api/v1/users/refresh', {}).pipe(take(1)).subscribe();
+    this.postRefresh()
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.tokenStorage.setToken('access-token', res.accessToken);
+        this.tokenStorage.setToken('refresh-token', res.refreshToken);
+      });
+  }
+
+  postRefresh() {
+    return this.http.post<{ accessToken: string; refreshToken: string }>(
+      '/api/authentication/refresh-token',
+      {},
+      {
+        headers: {
+          Authorization:
+            'Bearer ' + this.tokenStorage.getToken('refresh-token'),
+        },
+      }
+    );
   }
 
   isAuthenticated(): boolean {
-    const token = this.tokenStorage.getToken();
+    const token = this.tokenStorage.getToken('refresh-token');
 
     if (token === null) {
       return false;
@@ -59,7 +88,7 @@ export class AuthenticationService {
   }
 
   hasRole(role: string): boolean {
-    const token = this.tokenStorage.getToken();
+    const token = this.tokenStorage.getToken('access-token');
 
     if (token === null) {
       return false;
@@ -71,7 +100,7 @@ export class AuthenticationService {
   }
 
   getExpiresAt() {
-    const token = this.tokenStorage.getToken();
+    const token = this.tokenStorage.getToken('refresh-token');
 
     if (token === null) {
       return false;
@@ -80,5 +109,9 @@ export class AuthenticationService {
     const decodedToken = this.jwtHelper.decodeToken(token);
 
     return decodedToken['exp'];
+  }
+
+  isTokenExpired(token: string) {
+    return this.jwtHelper.isTokenExpired(token, 5);
   }
 }

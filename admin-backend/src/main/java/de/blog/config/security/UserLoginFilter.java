@@ -17,16 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserLoginFilter extends UsernamePasswordAuthenticationFilter {
 
   private final DaoAuthenticationProvider authenticationProvider;
-  private final JwtTokenUtils jwtTokenUtils;
+  private final JwtTokenUtil jwtTokenUtil;
   private final UserEntityDao userEntityDao;
   private final SessionService sessionService;
 
   public UserLoginFilter(
           final DaoAuthenticationProvider authenticationProvider,
-          final JwtTokenUtils jwtTokenUtils,
+          final JwtTokenUtil jwtTokenUtil,
           final UserEntityDao userEntityDao, final SessionService sessionService) {
     this.authenticationProvider = authenticationProvider;
-    this.jwtTokenUtils = jwtTokenUtils;
+    this.jwtTokenUtil = jwtTokenUtil;
     this.userEntityDao = userEntityDao;
     this.sessionService = sessionService;
   }
@@ -63,9 +63,10 @@ public class UserLoginFilter extends UsernamePasswordAuthenticationFilter {
       final HttpServletResponse response,
       final FilterChain chain,
       final Authentication authResult) {
-
-    final String token = jwtTokenUtils.createToken(authResult);
-    sessionService.setSession(token, request.getRemoteAddr());
-    response.setHeader("auth-token", token);
+    final String accessToken = jwtTokenUtil.createAccessToken(authResult);
+    final String refreshToken = jwtTokenUtil.createRefreshToken(authResult);
+    sessionService.setSession(refreshToken, request.getRemoteAddr());
+    response.setHeader("access-token", accessToken);
+    response.setHeader("refresh-token", refreshToken);
   }
 }

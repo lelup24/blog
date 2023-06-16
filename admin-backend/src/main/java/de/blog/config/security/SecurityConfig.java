@@ -21,17 +21,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final SecurityUserService userService;
-  private final JwtTokenUtils jwtTokenUtils;
+  private final JwtTokenUtil jwtTokenUtil;
   private final JwtTokenFilter jwtTokenFilter;
   private final UserEntityDao userEntityDao;
   private final SessionService sessionService;
 
   public SecurityConfig(
           final SecurityUserService userService,
-          final JwtTokenUtils jwtTokenUtils,
+          final JwtTokenUtil jwtTokenUtil,
           final JwtTokenFilter jwtTokenFilter, final UserEntityDao userEntityDao, final SessionService sessionService) {
     this.userService = userService;
-    this.jwtTokenUtils = jwtTokenUtils;
+    this.jwtTokenUtil = jwtTokenUtil;
     this.jwtTokenFilter = jwtTokenFilter;
     this.userEntityDao = userEntityDao;
     this.sessionService = sessionService;
@@ -54,14 +54,14 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 
     final UserLoginFilter userLoginFilter =
-        new UserLoginFilter(daoAuthenticationProvider(), jwtTokenUtils, userEntityDao, sessionService);
+        new UserLoginFilter(daoAuthenticationProvider(), jwtTokenUtil, userEntityDao, sessionService);
     userLoginFilter.setFilterProcessesUrl("/api/login");
 
     http.cors(Customizer.withDefaults())
         .addFilter(userLoginFilter)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            m -> m.requestMatchers("/api/login").permitAll().anyRequest().hasRole("ADMIN"))
+            m -> m.requestMatchers("/api/login", "/api/authentication/**").permitAll().anyRequest().hasRole("ADMIN"))
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();

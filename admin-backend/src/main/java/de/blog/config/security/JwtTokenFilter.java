@@ -17,16 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
   private final SecurityUserService userService;
-  private final JwtTokenUtils jwtTokenUtils;
-  private final SessionService sessionService;
+  private final JwtTokenUtil jwtTokenUtil;
 
   public JwtTokenFilter(
-      final SecurityUserService userService,
-      final JwtTokenUtils jwtTokenUtils,
-      final SessionService sessionService) {
+          final SecurityUserService userService,
+          final JwtTokenUtil jwtTokenUtil) {
     this.userService = userService;
-    this.jwtTokenUtils = jwtTokenUtils;
-    this.sessionService = sessionService;
+    this.jwtTokenUtil = jwtTokenUtil;
   }
 
   @Override
@@ -45,34 +42,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     final String token = header.split(" ")[1].trim();
 
-    if (!jwtTokenUtils.validate(token)) {
+    if (!jwtTokenUtil.validate(token)) {
       filterChain.doFilter(request, response);
       return;
     }
 
     final UserDetails userDetails =
-        userService.loadUserByUsername(jwtTokenUtils.getUsername(token));
+        userService.loadUserByUsername(jwtTokenUtil.getUsername(token));
 
     final UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(
             userDetails.getUsername(), null, userDetails.getAuthorities());
-
-    String refreshedToken = jwtTokenUtils.createToken(authenticationToken);
-
-    // selber Seed?
-    while (refreshedToken.equals(token)) {
-      refreshedToken = jwtTokenUtils.createToken(authenticationToken);
-    }
-
-    if (!sessionService.validate(token, request.getRemoteAddr(), refreshedToken)) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-
+    
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-    response.setHeader("auth-token", refreshedToken);
 
     filterChain.doFilter(request, response);
   }

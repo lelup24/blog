@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 
+export type TokenKey = 'access-token' | 'refresh-token';
+
 @Injectable()
 export class TokenStorage {
-  getToken(): string | null {
-    return localStorage.getItem('auth-token');
+  getToken(key: TokenKey): string | null {
+    return localStorage.getItem(key);
   }
 
-  setToken(token: string): void {
-    localStorage.setItem('auth-token', token);
+  setToken(key: TokenKey, token: string): void {
+    localStorage.setItem(key, token);
   }
 
-  removeToken(key: string) {
+  removeToken(key: TokenKey) {
     localStorage.removeItem(key);
   }
 }

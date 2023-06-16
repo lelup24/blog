@@ -17,20 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SessionService {
-  private final JwtTokenUtils jwtTokenUtils;
+  private final JwtTokenUtil jwtTokenUtil;
   private final Clock clock;
   private final SessionDao sessionDao;
   private final UserEntityDao userEntityDao;
   private final CurrentUser currentUser;
 
   public SessionService(
-      final SessionDao sessionDao,
-      final JwtTokenUtils jwtTokenUtils,
-      final UserEntityDao userEntityDao,
-      final Clock clock,
-      final CurrentUser currentUser) {
+          final SessionDao sessionDao,
+          final JwtTokenUtil jwtTokenUtil,
+          final UserEntityDao userEntityDao,
+          final Clock clock,
+          final CurrentUser currentUser) {
     this.sessionDao = sessionDao;
-    this.jwtTokenUtils = jwtTokenUtils;
+    this.jwtTokenUtil = jwtTokenUtil;
     this.userEntityDao = userEntityDao;
     this.clock = clock;
     this.currentUser = currentUser;
@@ -38,9 +38,10 @@ public class SessionService {
 
   public void setSession(final String token, final String remoteAddr) {
 
+
     final UserEntity userEntity =
         userEntityDao
-            .fetchOptionalByUsername(jwtTokenUtils.getUsername(token))
+            .fetchOptionalByUsername(jwtTokenUtil.getUsername(token))
             .orElseThrow(() -> new RuntimeException("User not found"));
 
     final List<Session> oldSessions = sessionDao.fetchByUserId(userEntity.getId());
@@ -49,7 +50,7 @@ public class SessionService {
 
     final LocalDateTime now = LocalDateTime.now(clock);
     final LocalDateTime expiresAt =
-        jwtTokenUtils.getExpiresAt(token).toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime();
+        jwtTokenUtil.getExpiresAt(token).toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime();
     final Session session =
         new Session()
             .setId(UUID.randomUUID())
@@ -64,7 +65,7 @@ public class SessionService {
     sessionDao.insert(session);
   }
 
-  private void updateSession(String oldToken, String refreshedToken) {
+  public void updateSession(String oldToken, String refreshedToken) {
 
     Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(oldToken);
 
@@ -77,7 +78,7 @@ public class SessionService {
     sessionDao.update(session.setUpdatedAt(LocalDateTime.now(clock)));
 
     final LocalDateTime expiresAt =
-        jwtTokenUtils
+        jwtTokenUtil
             .getExpiresAt(refreshedToken)
             .toInstant()
             .atZone(DEFAULT_ZONE_ID)
@@ -88,15 +89,17 @@ public class SessionService {
             .setToken(refreshedToken)
             .setExpiresAt(expiresAt)
             .setUpdatedAt(LocalDateTime.now(clock)));
+
   }
 
   @Transactional
-  public boolean validate(String token, String remoteAddr, final String refreshedToken) {
+  public boolean validate(String token, String remoteAddr) {
     Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(token);
 
     if (sessionOptional.isEmpty()) {
+
       Optional<UserEntity> userEntity =
-          userEntityDao.fetchOptionalByUsername(jwtTokenUtils.getUsername(token));
+          userEntityDao.fetchOptionalByUsername(jwtTokenUtil.getUsername(token));
 
       if (userEntity.isEmpty()) {
         return false;
@@ -125,9 +128,9 @@ public class SessionService {
       return false;
     }
 
-    updateSession(token, refreshedToken);
     return true;
   }
+
 
   public void removeSessions() {
     final List<Session> sessions = sessionDao.fetchByUserId(currentUser.getId());

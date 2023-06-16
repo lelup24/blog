@@ -17,35 +17,45 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtTokenUtils {
+public class JwtTokenUtil {
 
   private RSAPrivateKey privateKey;
   private RSAPublicKey publicKey;
 
   private final Algorithm algorithm;
   private final RsaProperties rsaProperties;
-
-  public JwtTokenUtils(final RsaProperties rsaProperties) {
+  public JwtTokenUtil(final RsaProperties rsaProperties) {
     this.rsaProperties = rsaProperties;
     loadKeys();
     algorithm = Algorithm.RSA256(publicKey, privateKey);
   }
 
-  public String createToken(final Authentication authentication) {
-
-    List<String> roles =
-        authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(role -> role.replace("ROLE_", ""))
-            .toList();
+  public String createRefreshToken(final Authentication authentication) {
 
     return JWT.create()
-        .withSubject(authentication.getName())
-        .withIssuer("blog-backend")
-        .withClaim("roles", roles)
-        .withIssuedAt(new Date())
-        .withExpiresAt(new Date(new Date().getTime() + 1800000))
-        .sign(algorithm);
+            .withSubject(authentication.getName())
+            .withIssuer("blog-backend")
+            .withIssuedAt(new Date())
+            .withExpiresAt(new Date(new Date().getTime() + 1800000))
+            .sign(algorithm);
+  }
+
+  public String createAccessToken(final Authentication authentication) {
+
+    List<String> roles =
+            authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.replace("ROLE_", ""))
+                    .toList();
+
+    return JWT.create()
+            .withSubject(authentication.getName())
+            .withIssuer("blog-backend")
+            .withClaim("roles", roles)
+            .withIssuedAt(new Date())
+//            .withExpiresAt(new Date(new Date().getTime() + 300000))
+            .withExpiresAt(new Date(new Date().getTime() + 30000))
+            .sign(algorithm);
   }
 
   public Boolean validate(final String tokenAsString) {

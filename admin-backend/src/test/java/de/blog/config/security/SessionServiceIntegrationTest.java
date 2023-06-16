@@ -9,6 +9,7 @@ import de.blog.data.tables.daos.SessionDao;
 import de.blog.data.tables.pojos.Session;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class SessionServiceIntegrationTest {
         testRestTemplate.exchange("/api/login", HttpMethod.POST, request, Void.class);
 
     // assert
-    String token = response.getHeaders().getFirst("auth-token");
+    String token = response.getHeaders().getFirst("refresh-token");
 
     Optional<Session> session = sessionDao.fetchOptionalByToken(token);
 
@@ -69,7 +70,7 @@ class SessionServiceIntegrationTest {
     ResponseEntity<Void> response =
         testRestTemplate.exchange("/api/login", HttpMethod.POST, request, Void.class);
 
-    String token = response.getHeaders().getFirst("auth-token");
+    String token = response.getHeaders().getFirst("refresh-token");
 
     // run
     HttpHeaders httpHeaders = new HttpHeaders();
@@ -79,12 +80,12 @@ class SessionServiceIntegrationTest {
 
     ResponseEntity<Void> refreshResponse_1 =
         testRestTemplate.exchange(
-            "/api/v1/users/refresh", HttpMethod.POST, refreshRequest, Void.class);
+            "/api/authentication/refresh-token", HttpMethod.POST, refreshRequest, Void.class);
 
 
     ResponseEntity<String> refreshResponse_2 =
         testRestTemplate.exchange(
-            "/api/v1/users/refresh", HttpMethod.GET, refreshRequest, String.class);
+            "/api/authentication/refresh-token", HttpMethod.POST, refreshRequest, String.class);
 
     // assert
     assertThat(refreshResponse_1.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -101,7 +102,7 @@ class SessionServiceIntegrationTest {
     ResponseEntity<Void> response =
         testRestTemplate.exchange("/api/login", HttpMethod.POST, request, Void.class);
 
-    String token = response.getHeaders().getFirst("auth-token");
+    String token = response.getHeaders().getFirst("refresh-token");
 
     // run
     HttpHeaders httpHeaders = new HttpHeaders();
@@ -109,11 +110,11 @@ class SessionServiceIntegrationTest {
 
     HttpEntity<Object> refreshRequest = new HttpEntity<>(null, httpHeaders);
 
-    ResponseEntity<Void> refreshResponse =
+    ResponseEntity<TokenResponse> refreshResponse =
         testRestTemplate.exchange(
-            "/api/v1/users/refresh", HttpMethod.POST, refreshRequest, Void.class);
+            "/api/authentication/refresh-token", HttpMethod.POST, refreshRequest, TokenResponse.class);
 
-    String refreshedToken = refreshResponse.getHeaders().getFirst("auth-token");
+    String refreshToken = Objects.requireNonNull(refreshResponse.getBody()).getRefreshToken();
 
     // assert
     assertThat(refreshResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -123,13 +124,13 @@ class SessionServiceIntegrationTest {
         .thenReturn(LocalDateTime.now().plusHours(2L).atZone(DEFAULT_ZONE_ID).toInstant());
 
     HttpHeaders httpHeadersExpired = new HttpHeaders();
-    httpHeadersExpired.set(HttpHeaders.AUTHORIZATION, "Bearer + " + refreshedToken);
+    httpHeadersExpired.set(HttpHeaders.AUTHORIZATION, "Bearer + " + refreshToken);
 
     HttpEntity<Object> expiredRequest = new HttpEntity<>(null, httpHeadersExpired);
 
-    ResponseEntity<Void> expiredResponse =
+    ResponseEntity<TokenResponse> expiredResponse =
         testRestTemplate.exchange(
-            "/api/v1/users/refresh", HttpMethod.POST, expiredRequest, Void.class);
+            "/api/authentication/refresh-token", HttpMethod.POST, expiredRequest, TokenResponse.class);
 
     // assert
     assertThat(expiredResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
