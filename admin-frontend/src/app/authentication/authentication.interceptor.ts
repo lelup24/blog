@@ -25,13 +25,17 @@ export class AuthenticationInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const accessToken = this.tokenStorage.getToken('access-token');
 
-    if (
-      !accessToken ||
-      req.url.includes('/api/authentication/refresh-token') ||
-      req.url.includes('/api/authentication/logout') ||
-      req.url.includes('/api/login')
-    ) {
+    if (!accessToken || req.url.includes('/api/login')) {
       return next.handle(req);
+    }
+
+    const refreshToken = this.tokenStorage.getToken('refresh-token');
+    if (req.url.includes('/api/authentication/refresh-token')) {
+      return next.handle(
+        req.clone({
+          headers: req.headers.set('Authorization', 'Bearer ' + refreshToken),
+        })
+      );
     }
 
     if (this.authService.isTokenExpired(accessToken)) {

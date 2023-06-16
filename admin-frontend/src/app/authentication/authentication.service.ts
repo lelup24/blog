@@ -67,13 +67,7 @@ export class AuthenticationService {
   postRefresh() {
     return this.http.post<{ accessToken: string; refreshToken: string }>(
       '/api/authentication/refresh-token',
-      {},
-      {
-        headers: {
-          Authorization:
-            'Bearer ' + this.tokenStorage.getToken('refresh-token'),
-        },
-      }
+      {}
     );
   }
 

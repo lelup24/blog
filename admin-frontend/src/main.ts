@@ -15,7 +15,7 @@ import {
 import { AuthenticationInterceptor } from './app/authentication/authentication.interceptor';
 
 export function tokenGetter() {
-  return localStorage.getItem('auth-token');
+  return localStorage.getItem('access-token');
 }
 
 bootstrapApplication(AppComponent, {

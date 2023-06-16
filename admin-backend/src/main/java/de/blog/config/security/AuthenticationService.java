@@ -1,10 +1,10 @@
 package de.blog.config.security;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +24,7 @@ public class AuthenticationService {
   }
 
   public TokenResponse refreshToken(HttpServletRequest request) {
-    final String header = request.getHeader("Authorization");
+    final String header = request.getHeader(AUTHORIZATION);
 
     if (header == null || !header.startsWith("Bearer ")) {
       throw new RuntimeException();
@@ -50,12 +50,9 @@ public class AuthenticationService {
     }
 
     if (!sessionService.validate(token, request.getRemoteAddr())) {
-      throw new RuntimeException();
+      throw new RuntimeException("Invalid session");
     }
-
-    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+    
     String accessToken = jwtTokenUtil.createAccessToken(authenticationToken);
 
     sessionService.updateSession(token, refreshToken);

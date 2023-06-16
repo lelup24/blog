@@ -1,5 +1,7 @@
 package de.blog.config.security;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +33,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       @NonNull final FilterChain filterChain)
       throws ServletException, IOException {
 
-    final String header = request.getHeader("Authorization");
+    final String header = request.getHeader(AUTHORIZATION);
 
     if (header == null || !header.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);

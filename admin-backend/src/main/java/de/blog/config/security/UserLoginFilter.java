@@ -46,7 +46,7 @@ public class UserLoginFilter extends UsernamePasswordAuthenticationFilter {
       throw new RuntimeException(e);
     }
 
-    UserEntity userEntity =
+    final UserEntity userEntity =
         userEntityDao
             .fetchOptionalByUsername(userLoginModel.getUsername())
             .orElseThrow(() -> new RuntimeException("User not found"));
