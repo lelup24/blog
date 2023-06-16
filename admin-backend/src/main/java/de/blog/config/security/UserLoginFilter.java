@@ -22,9 +22,10 @@ public class UserLoginFilter extends UsernamePasswordAuthenticationFilter {
   private final SessionService sessionService;
 
   public UserLoginFilter(
-          final DaoAuthenticationProvider authenticationProvider,
-          final JwtTokenUtil jwtTokenUtil,
-          final UserEntityDao userEntityDao, final SessionService sessionService) {
+      final DaoAuthenticationProvider authenticationProvider,
+      final JwtTokenUtil jwtTokenUtil,
+      final UserEntityDao userEntityDao,
+      final SessionService sessionService) {
     this.authenticationProvider = authenticationProvider;
     this.jwtTokenUtil = jwtTokenUtil;
     this.userEntityDao = userEntityDao;

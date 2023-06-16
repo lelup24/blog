@@ -19,9 +19,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   private final SecurityUserService userService;
   private final JwtTokenUtil jwtTokenUtil;
 
-  public JwtTokenFilter(
-          final SecurityUserService userService,
-          final JwtTokenUtil jwtTokenUtil) {
+  public JwtTokenFilter(final SecurityUserService userService, final JwtTokenUtil jwtTokenUtil) {
     this.userService = userService;
     this.jwtTokenUtil = jwtTokenUtil;
   }
@@ -47,13 +45,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       return;
     }
 
-    final UserDetails userDetails =
-        userService.loadUserByUsername(jwtTokenUtil.getUsername(token));
+    final UserDetails userDetails = userService.loadUserByUsername(jwtTokenUtil.getUsername(token));
 
     final UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(
             userDetails.getUsername(), null, userDetails.getAuthorities());
-    
+
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

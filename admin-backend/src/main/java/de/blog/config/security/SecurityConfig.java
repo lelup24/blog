@@ -27,9 +27,11 @@ public class SecurityConfig {
   private final SessionService sessionService;
 
   public SecurityConfig(
-          final SecurityUserService userService,
-          final JwtTokenUtil jwtTokenUtil,
-          final JwtTokenFilter jwtTokenFilter, final UserEntityDao userEntityDao, final SessionService sessionService) {
+      final SecurityUserService userService,
+      final JwtTokenUtil jwtTokenUtil,
+      final JwtTokenFilter jwtTokenFilter,
+      final UserEntityDao userEntityDao,
+      final SessionService sessionService) {
     this.userService = userService;
     this.jwtTokenUtil = jwtTokenUtil;
     this.jwtTokenFilter = jwtTokenFilter;
@@ -54,14 +56,19 @@ public class SecurityConfig {
   protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 
     final UserLoginFilter userLoginFilter =
-        new UserLoginFilter(daoAuthenticationProvider(), jwtTokenUtil, userEntityDao, sessionService);
+        new UserLoginFilter(
+            daoAuthenticationProvider(), jwtTokenUtil, userEntityDao, sessionService);
     userLoginFilter.setFilterProcessesUrl("/api/login");
 
     http.cors(Customizer.withDefaults())
         .addFilter(userLoginFilter)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            m -> m.requestMatchers("/api/login", "/api/authentication/**").permitAll().anyRequest().hasRole("ADMIN"))
+            m ->
+                m.requestMatchers("/api/login", "/api/authentication/**")
+                    .permitAll()
+                    .anyRequest()
+                    .hasRole("ADMIN"))
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();

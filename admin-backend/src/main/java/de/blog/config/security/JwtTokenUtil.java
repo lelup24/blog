@@ -24,6 +24,7 @@ public class JwtTokenUtil {
 
   private final Algorithm algorithm;
   private final RsaProperties rsaProperties;
+
   public JwtTokenUtil(final RsaProperties rsaProperties) {
     this.rsaProperties = rsaProperties;
     loadKeys();
@@ -33,29 +34,29 @@ public class JwtTokenUtil {
   public String createRefreshToken(final Authentication authentication) {
 
     return JWT.create()
-            .withSubject(authentication.getName())
-            .withIssuer("blog-backend")
-            .withIssuedAt(new Date())
-            .withExpiresAt(new Date(new Date().getTime() + 1800000))
-            .sign(algorithm);
+        .withSubject(authentication.getName())
+        .withIssuer("blog-backend")
+        .withIssuedAt(new Date())
+        .withExpiresAt(new Date(new Date().getTime() + 1800000))
+        .sign(algorithm);
   }
 
   public String createAccessToken(final Authentication authentication) {
 
     List<String> roles =
-            authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .map(role -> role.replace("ROLE_", ""))
-                    .toList();
+        authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .map(role -> role.replace("ROLE_", ""))
+            .toList();
 
     return JWT.create()
-            .withSubject(authentication.getName())
-            .withIssuer("blog-backend")
-            .withClaim("roles", roles)
-            .withIssuedAt(new Date())
-//            .withExpiresAt(new Date(new Date().getTime() + 300000))
-            .withExpiresAt(new Date(new Date().getTime() + 30000))
-            .sign(algorithm);
+        .withSubject(authentication.getName())
+        .withIssuer("blog-backend")
+        .withClaim("roles", roles)
+        .withIssuedAt(new Date())
+        //            .withExpiresAt(new Date(new Date().getTime() + 300000))
+        .withExpiresAt(new Date(new Date().getTime() + 30000))
+        .sign(algorithm);
   }
 
   public Boolean validate(final String tokenAsString) {
@@ -77,7 +78,7 @@ public class JwtTokenUtil {
 
   private void loadKeys() {
     try {
-      KeyFactory kf = KeyFactory.getInstance("RSA");
+      final KeyFactory kf = KeyFactory.getInstance("RSA");
       privateKey =
           (RSAPrivateKey)
               kf.generatePrivate(

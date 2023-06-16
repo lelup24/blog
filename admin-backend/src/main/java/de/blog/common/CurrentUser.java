@@ -21,7 +21,7 @@ public class CurrentUser {
   }
 
   public UserEntity getUser() {
-    String username = getUsername();
+    final String username = getUsername();
     return userEntityDao
         .fetchOptionalByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("User with name [" + username + "]"));

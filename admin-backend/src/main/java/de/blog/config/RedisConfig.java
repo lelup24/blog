@@ -24,5 +24,4 @@ public class RedisConfig {
     redisStandaloneConfiguration.setPassword("redis");
     return new JedisConnectionFactory(redisStandaloneConfiguration);
   }
-
 }

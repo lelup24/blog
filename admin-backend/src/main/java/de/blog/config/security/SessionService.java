@@ -24,11 +24,11 @@ public class SessionService {
   private final CurrentUser currentUser;
 
   public SessionService(
-          final SessionDao sessionDao,
-          final JwtTokenUtil jwtTokenUtil,
-          final UserEntityDao userEntityDao,
-          final Clock clock,
-          final CurrentUser currentUser) {
+      final SessionDao sessionDao,
+      final JwtTokenUtil jwtTokenUtil,
+      final UserEntityDao userEntityDao,
+      final Clock clock,
+      final CurrentUser currentUser) {
     this.sessionDao = sessionDao;
     this.jwtTokenUtil = jwtTokenUtil;
     this.userEntityDao = userEntityDao;
@@ -37,7 +37,6 @@ public class SessionService {
   }
 
   public void setSession(final String token, final String remoteAddr) {
-
 
     final UserEntity userEntity =
         userEntityDao
@@ -65,15 +64,15 @@ public class SessionService {
     sessionDao.insert(session);
   }
 
-  public void updateSession(String oldToken, String refreshedToken) {
+  public void updateSession(final String oldToken, final String refreshedToken) {
 
-    Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(oldToken);
+    final Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(oldToken);
 
     if (sessionOptional.isEmpty()) {
       return;
     }
 
-    Session session = sessionOptional.get();
+    final Session session = sessionOptional.get();
 
     sessionDao.update(session.setUpdatedAt(LocalDateTime.now(clock)));
 
@@ -89,23 +88,22 @@ public class SessionService {
             .setToken(refreshedToken)
             .setExpiresAt(expiresAt)
             .setUpdatedAt(LocalDateTime.now(clock)));
-
   }
 
   @Transactional
-  public boolean validate(String token, String remoteAddr) {
-    Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(token);
+  public boolean validate(final String token, final String remoteAddr) {
+    final Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(token);
 
     if (sessionOptional.isEmpty()) {
 
-      Optional<UserEntity> userEntity =
+      final Optional<UserEntity> userEntity =
           userEntityDao.fetchOptionalByUsername(jwtTokenUtil.getUsername(token));
 
       if (userEntity.isEmpty()) {
         return false;
       }
 
-      List<Session> sessions = sessionDao.fetchByUserId(userEntity.get().getId());
+      final List<Session> sessions = sessionDao.fetchByUserId(userEntity.get().getId());
 
       sessions.forEach(session -> session.setRevoked(Boolean.TRUE));
       sessionDao.update(sessions);
@@ -113,7 +111,7 @@ public class SessionService {
       return false;
     }
 
-    Session session = sessionOptional.get();
+    final Session session = sessionOptional.get();
 
     if (LocalDateTime.now(clock).isAfter(session.getExpiresAt())) {
       return false;
@@ -130,7 +128,6 @@ public class SessionService {
 
     return true;
   }
-
 
   public void removeSessions() {
     final List<Session> sessions = sessionDao.fetchByUserId(currentUser.getId());
