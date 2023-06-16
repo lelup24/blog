@@ -10,14 +10,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
 
   @Bean
-  RedisTemplate<String, Long> redisTemplate() {
+  protected RedisTemplate<String, Long> redisTemplate() {
     RedisTemplate<String, Long> template = new RedisTemplate<>();
     template.setConnectionFactory(jedisConnectionFactory());
     return template;
   }
 
   @Bean
-  JedisConnectionFactory jedisConnectionFactory() {
+  protected JedisConnectionFactory jedisConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
     redisStandaloneConfiguration.setPort(7000);
     redisStandaloneConfiguration.setHostName("localhost");

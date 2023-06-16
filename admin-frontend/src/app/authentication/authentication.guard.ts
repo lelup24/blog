@@ -5,25 +5,20 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+import { Roles } from './types';
 
 export class AuthenticationGuard {
   authenticationService = inject(AuthenticationService);
   router = inject(Router);
 
-  isAdmin(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  isAdmin(route: ActivatedRouteSnapshot, _: RouterStateSnapshot): boolean {
     if (!this.authenticationService.isAuthenticated()) {
       this.router.navigate(['']).then();
       return false;
     }
 
-    const roles: string[] = route.data['roles'];
+    const roles: Roles[] = route.data['roles'];
 
-    for (const role of roles) {
-      if (this.authenticationService.hasRole(role)) {
-        return true;
-      }
-    }
-
-    return false;
+    return roles.every((role) => this.authenticationService.hasRole(role));
   }
 }

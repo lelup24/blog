@@ -16,32 +16,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SecurityUserService implements UserDetailsService {
 
-    private final UserEntityDao userEntityDao;
-    private final UserFinder userFinder;
+  private final UserEntityDao userEntityDao;
+  private final UserFinder userFinder;
 
+  public SecurityUserService(final UserEntityDao userEntityDao, final UserFinder userFinder) {
+    this.userEntityDao = userEntityDao;
+    this.userFinder = userFinder;
+  }
 
-    public SecurityUserService(final UserEntityDao userEntityDao, final UserFinder userFinder) {
-        this.userEntityDao = userEntityDao;
-        this.userFinder = userFinder;
+  @Transactional(readOnly = true)
+  @Override
+  public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+
+    final Optional<UserEntity> userEntityOptional = userEntityDao.fetchOptionalByUsername(username);
+
+    if (userEntityOptional.isEmpty()) {
+      throw new UsernameNotFoundException("User not found");
     }
 
-    @Transactional
-    @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+    final UserEntity userEntity = userEntityOptional.get();
+    final List<Role> roles = userFinder.findRolesByUserId(userEntity.getId());
 
-        Optional<UserEntity> userEntityOptional = userEntityDao.fetchOptionalByUsername(username);
-
-        if (userEntityOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        UserEntity userEntity = userEntityOptional.get();
-        List<Role> roles = userFinder.findRolesByUserId(userEntity.getId());
-
-        return User.builder()
-                .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
-                .roles(roles.stream().map(Role::getName).toArray(String[]::new))
-                .build();
-    }
+    return User.builder()
+        .username(userEntity.getUsername())
+        .password(userEntity.getPassword())
+        .roles(roles.stream().map(Role::getName).toArray(String[]::new))
+        .build();
+  }
 }

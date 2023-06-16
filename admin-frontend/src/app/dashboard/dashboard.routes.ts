@@ -14,6 +14,9 @@ export const DASHBOARD_ROUTES: Routes = [
           ),
       },
       {
+        data: {
+          roles: ['ADMIN'],
+        },
         path: 'posts',
         loadComponent: () =>
           import('./posts/posts.component').then((c) => c.PostsComponent),

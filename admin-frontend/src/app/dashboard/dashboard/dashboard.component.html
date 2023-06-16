@@ -8,7 +8,9 @@
     <div>Post C - 20 views</div>
   </mat-card-content>
   <mat-card-actions align="end">
-    <button color="primary" mat-raised-button>View all</button>
+    <button color="primary" mat-raised-button [routerLink]="['posts']">
+      View all
+    </button>
   </mat-card-actions>
 </mat-card>
 

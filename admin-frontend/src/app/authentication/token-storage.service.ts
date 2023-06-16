@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export type TokenKey = 'access-token' | 'refresh-token';
+import { TokenKey } from './types';
 
 @Injectable()
 export class TokenStorage {
