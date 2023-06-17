@@ -17,6 +17,10 @@ export class ThemeService {
 
   setTheme(theme: AdminTheme) {
     this.link?.setAttribute('href', `themes/${theme}.css`);
+    document.documentElement.classList.remove(
+      `${this.activeTheme$.value}-theme`
+    );
+    document.documentElement.classList.add(`${theme}-theme`);
     this.activeTheme$.next(theme);
   }
 }

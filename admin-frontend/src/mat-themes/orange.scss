@@ -1,0 +1,70 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$admin-primary-orange: (
+  50: #fcf2e7,
+  100: #f8dec3,
+  200: #f3c89c,
+  300: #eeb274,
+  400: #eaa256,
+  500: #e69138,
+  600: #e38932,
+  700: #df7e2b,
+  800: #db7424,
+  900: #d56217,
+  A100: #ffffff,
+  A200: #ffe3d4,
+  A400: #ffc3a1,
+  A700: #ffb287,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$my-custom-level: mat.define-typography-level(
+  $font-family: Roboto,
+  $font-weight: 400,
+  $font-size: 1rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$typography: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+  $body-1: mat.define-typography-level(14px),
+  $body-2: mat.define-typography-level(14px),
+  $button: mat.define-typography-level(14px),
+);
+
+$admin-frontend-primary-orange: mat.define-palette($admin-primary-orange);
+$admin-frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$admin-frontend-warn: mat.define-palette(mat.$red-palette);
+
+$admin-frontend-orange-theme: mat.define-light-theme(
+    (
+      color: (
+        primary: $admin-frontend-primary-orange,
+        accent: $admin-frontend-accent,
+        warn: $admin-frontend-warn,
+      ),
+      typographie: $typography,
+    )
+);
+
+.orange-theme {
+  @include mat.all-component-colors($admin-frontend-orange-theme);
+}

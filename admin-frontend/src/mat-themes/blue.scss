@@ -1,0 +1,70 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$admin-primary-blue: (
+  50: #e2eaf2,
+  100: #b6cbdf,
+  200: #85a9ca,
+  300: #5487b4,
+  400: #306da4,
+  500: #0b5394,
+  600: #0a4c8c,
+  700: #084281,
+  800: #063977,
+  900: #032965,
+  A100: #95b6ff,
+  A200: #6294ff,
+  A400: #2f71ff,
+  A700: #155fff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$admin-frontend-primary-blue: mat.define-palette($admin-primary-blue);
+$admin-frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$admin-frontend-warn: mat.define-palette(mat.$red-palette);
+
+$my-custom-level: mat.define-typography-level(
+  $font-family: Roboto,
+  $font-weight: 400,
+  $font-size: 1rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$typography: mat.define-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+  $body-1: mat.define-typography-level(14px),
+  $body-2: mat.define-typography-level(14px),
+  $button: mat.define-typography-level(14px),
+);
+
+$admin-frontend-blue-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $admin-frontend-primary-blue,
+      accent: $admin-frontend-accent,
+      warn: $admin-frontend-warn,
+    ),
+    typographie: $typography,
+  )
+);
+
+.blue-theme {
+  @include mat.all-component-colors($admin-frontend-blue-theme);
+}

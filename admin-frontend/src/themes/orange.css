@@ -1,4 +1,4 @@
-/*:root {*/
+
 :root {
   --color-primary-50: #fcf2e7;
   --color-primary-100: #f8dec3;
@@ -34,10 +34,6 @@
   --color-background: #242424;
   --color-background-text: black;
 }
-
-
-/* For use in src/lib/core/theming/_palette.scss */
-
 
 
 
