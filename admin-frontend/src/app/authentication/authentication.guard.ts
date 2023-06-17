@@ -5,7 +5,6 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Roles } from './types';
 
 export class AuthenticationGuard {
   authenticationService = inject(AuthenticationService);
@@ -17,8 +16,14 @@ export class AuthenticationGuard {
       return false;
     }
 
-    const roles: Roles[] = route.data['roles'];
+    const requiredRoles: unknown = route.data['roles'];
 
-    return roles.every((role) => this.authenticationService.hasRole(role));
+    if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
+      return true;
+    }
+
+    return requiredRoles.every((role) =>
+      this.authenticationService.hasRole(role)
+    );
   }
 }

@@ -18,20 +18,20 @@ $admin-primary: (
   A400: var(--color-primary-A300),
   A700: var(--color-primary-A700),
   contrast: (
-    50: var(--color-primary-contrast-50),
-    100: var(--color-primary-contrast-100),
-    200: var(--color-primary-contrast-200),
-    300: var(--color-primary-contrast-300),
-    400: var(--color-primary-contrast-400),
-    500: var(--color-primary-contrast-500),
-    600: var(--color-primary-contrast-600),
-    700: var(--color-primary-contrast-700),
-    800: var(--color-primary-contrast-800),
-    900: var(--color-primary-contrast-900),
-    A100: var(--color-primary-contrast-A100),
-    A200: var(--color-primary-contrast-A200),
-    A400: var(--color-primary-contrast-A300),
-    A700: var(--color-primary-contrast-A700),
+    50: var(--color-primary-contrast-dark-50),
+    100: var(--color-primary-contrast-dark-100),
+    200: var(--color-primary-contrast-dark-200),
+    300: var(--color-primary-contrast-dark-300),
+    400: var(--color-primary-contrast-light-400),
+    500: var(--color-primary-contrast-light-500),
+    600: var(--color-primary-contrast-light-600),
+    700: var(--color-primary-contrast-light-700),
+    800: var(--color-primary-contrast-light-800),
+    900: var(--color-primary-contrast-light-900),
+    A100: var(--color-primary-contrast-light-A100),
+    A200: var(--color-primary-contrast-light-A200),
+    A400: var(--color-primary-contrast-light-A300),
+    A700: var(--color-primary-contrast-light-A700),
   ),
 );
 
@@ -91,11 +91,15 @@ $admin-frontend-theme: mat.define-light-theme(
 );
 
 @include mat.all-component-typographies($typography);
+//@include mat.all-component-themes($admin-frontend-theme);
 @include mat.all-component-themes($admin-frontend-theme);
-
 html,
 body {
   height: 100%;
+}
+
+.mdc-button__label {
+  color: var(--color-primary-contrast-light-500);
 }
 
 body {

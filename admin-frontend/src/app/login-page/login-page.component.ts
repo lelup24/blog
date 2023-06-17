@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import {
@@ -10,6 +10,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -24,13 +25,23 @@ import { AuthenticationService } from '../authentication/authentication.service'
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
   authenticationService = inject(AuthenticationService);
+  router = inject(Router);
 
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
+
+  ngOnInit(): void {
+    if (
+      this.authenticationService.isAuthenticated() &&
+      this.authenticationService.hasRole('ADMIN')
+    ) {
+      this.router.navigate(['dashboard']).then();
+    }
+  }
 
   submit() {
     this.authenticationService.login(

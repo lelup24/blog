@@ -36,6 +36,7 @@ public class SessionService {
     this.currentUser = currentUser;
   }
 
+  @Transactional
   public void setSession(final String token, final String remoteAddr) {
 
     final UserEntity userEntity =
@@ -50,6 +51,7 @@ public class SessionService {
     final LocalDateTime now = LocalDateTime.now(clock);
     final LocalDateTime expiresAt =
         jwtTokenUtil.getExpiresAt(token).toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime();
+
     final Session session =
         new Session()
             .setId(UUID.randomUUID())
@@ -64,6 +66,7 @@ public class SessionService {
     sessionDao.insert(session);
   }
 
+  @Transactional
   public void updateSession(final String oldToken, final String refreshedToken) {
 
     final Optional<Session> sessionOptional = sessionDao.fetchOptionalByToken(oldToken);
@@ -73,8 +76,6 @@ public class SessionService {
     }
 
     final Session session = sessionOptional.get();
-
-    sessionDao.update(session.setUpdatedAt(LocalDateTime.now(clock)));
 
     final LocalDateTime expiresAt =
         jwtTokenUtil
@@ -129,6 +130,7 @@ public class SessionService {
     return true;
   }
 
+  @Transactional
   public void removeSessions() {
     final List<Session> sessions = sessionDao.fetchByUserId(currentUser.getId());
     sessionDao.delete(sessions);

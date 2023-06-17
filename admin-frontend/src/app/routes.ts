@@ -1,36 +1,15 @@
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  RouterStateSnapshot,
-  Routes,
-} from '@angular/router';
-import { inject } from '@angular/core';
-import { AuthenticationGuard } from './authentication/authentication.guard';
-
-const canActivate: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-) => {
-  return inject(AuthenticationGuard).isAdmin(route, state);
-};
+import { Routes } from '@angular/router';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 export const APP_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./login-page/login-page.component').then(
-        (c) => c.LoginPageComponent
-      ),
+    component: LoginPageComponent,
   },
   {
     path: 'dashboard',
-    providers: [AuthenticationGuard],
-    canActivate: [canActivate],
-    canActivateChild: [canActivate],
-    data: {
-      roles: ['ADMIN'],
-    },
     loadChildren: () =>
       import('./dashboard/dashboard.routes').then((r) => r.DASHBOARD_ROUTES),
   },
+  { path: '**', redirectTo: '' },
 ];
