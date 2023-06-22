@@ -8,6 +8,9 @@ spring:
       cleanup-cron: 0 0 1 * * *
       table-name: user_session
       initialize-schema: always
+  security:
+    remember-me:
+      key: ${RM_KEY:my-secure-key}
 
   devtools:
     livereload:

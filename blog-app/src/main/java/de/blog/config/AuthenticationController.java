@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +23,14 @@ public class AuthenticationController {
 
   private final UserEntityDao userEntityDao;
   private final DaoAuthenticationProvider daoAuthenticationProvider;
+  private final RememberMeServices rememberMeServices;
 
-  public AuthenticationController(final UserEntityDao userEntityDao, final DaoAuthenticationProvider daoAuthenticationProvider) {
+  public AuthenticationController(
+          final UserEntityDao userEntityDao,
+          final DaoAuthenticationProvider daoAuthenticationProvider, final RememberMeServices rememberMeServices) {
     this.userEntityDao = userEntityDao;
-      this.daoAuthenticationProvider = daoAuthenticationProvider;
+    this.daoAuthenticationProvider = daoAuthenticationProvider;
+    this.rememberMeServices = rememberMeServices;
   }
 
   @GetMapping("/login")
@@ -53,13 +58,19 @@ public class AuthenticationController {
         UsernamePasswordAuthenticationToken.unauthenticated(
             username, userEntityOptional.get().getSalt() + password);
 
-      Authentication authentication = daoAuthenticationProvider.authenticate(authenticationToken);
-      SecurityContext context = SecurityContextHolder.createEmptyContext();
+    Authentication authentication = daoAuthenticationProvider.authenticate(authenticationToken);
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-      context.setAuthentication(authentication);
-      new HttpSessionSecurityContextRepository().saveContext(context, request, response);
+    context.setAuthentication(authentication);
+    new HttpSessionSecurityContextRepository().saveContext(context, request, response);
 
-      redirectAttributes.addAttribute("success", "You have been logged in successfully");
-      return "redirect:/";
+    boolean rememberMe = request.getParameter("remember-me") != null;
+
+    if (rememberMe) {
+      rememberMeServices.loginSuccess(request, response, authentication);
+    }
+
+    redirectAttributes.addAttribute("success", "You have been logged in successfully");
+    return "redirect:/";
   }
 }

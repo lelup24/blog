@@ -1,5 +1,6 @@
 package de.blog.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,18 +9,24 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+  @Value("${spring.security.remember-me.key}")
+    private String rememberMeKey;
 
   private final SecurityUserDetailsService userDetailsService;
 
-  public SecurityConfig(final SecurityUserDetailsService userDetailsService) {
+  public SecurityConfig(
+      final SecurityUserDetailsService userDetailsService) {
     this.userDetailsService = userDetailsService;
   }
 
@@ -63,8 +70,17 @@ public class SecurityConfig {
                         ((request, response, authentication) -> {
                           String redirectUrl = request.getHeader("Referer");
                           response.sendRedirect(redirectUrl == null ? "/" : redirectUrl);
-                        })));
+                        })))
+        .rememberMe(r -> r.rememberMeServices(rememberMeServices(userDetailsService)));
 
     return http.build();
+  }
+
+  @Bean
+  RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
+    TokenBasedRememberMeServices.RememberMeTokenAlgorithm encodingAlgorithm = TokenBasedRememberMeServices.RememberMeTokenAlgorithm.SHA256;
+    TokenBasedRememberMeServices rememberMe = new TokenBasedRememberMeServices(rememberMeKey, userDetailsService, encodingAlgorithm);
+    rememberMe.setMatchingAlgorithm(TokenBasedRememberMeServices.RememberMeTokenAlgorithm.MD5);
+    return rememberMe;
   }
 }
