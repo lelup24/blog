@@ -10,9 +10,9 @@ export class AuthenticationGuard {
   authenticationService = inject(AuthenticationService);
   router = inject(Router);
 
-  isAdmin(route: ActivatedRouteSnapshot, _: RouterStateSnapshot): boolean {
+  isAuthenticated(route: ActivatedRouteSnapshot, _: RouterStateSnapshot): boolean {
     if (!this.authenticationService.isAuthenticated()) {
-      this.router.navigate(['']).then();
+      this.router.navigate(['/']).then();
       return false;
     }
 
@@ -22,8 +22,15 @@ export class AuthenticationGuard {
       return true;
     }
 
-    return requiredRoles.every((role) =>
+    let hasRole = requiredRoles.every((role) =>
       this.authenticationService.hasRole(role)
     );
+
+    if (!hasRole) {
+      this.router.navigate(['/']).then();
+      return false;
+    }
+
+    return true;
   }
 }

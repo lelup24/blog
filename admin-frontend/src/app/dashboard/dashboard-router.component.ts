@@ -35,13 +35,6 @@ export class DashboardRouter implements OnInit, OnDestroy {
     this.themeService.activeTheme$.subscribe(
       (theme) => (this.activeTheme = theme)
     );
-    this.dashboardService.fetchUsers().subscribe((response) => {
-      console.log(response);
-    });
-
-    this.dashboardService.fetchUsers2().subscribe((response) => {
-      console.log(response);
-    });
 
     if (this.authenticationService.isAuthenticated()) {
       this.calculateRemainingTime();

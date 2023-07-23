@@ -66,5 +66,5 @@ $admin-frontend-blue-theme: mat.define-light-theme(
 );
 
 .blue-theme {
-  @include mat.all-component-colors($admin-frontend-blue-theme);
+  @include mat.all-component-themes($admin-frontend-blue-theme);
 }

@@ -4,9 +4,10 @@ import {
   RouterStateSnapshot,
   Routes,
 } from '@angular/router';
-import { DashboardRouter } from './dashboard-router.component';
-import { AuthenticationGuard } from '../authentication/authentication.guard';
 import { inject } from '@angular/core';
+import { AuthenticationGuard } from '../../authentication/authentication.guard';
+import { PostRouter } from './posts-router.component';
+import { PostsService } from './posts.service';
 
 const canActivate: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -14,34 +15,29 @@ const canActivate: CanActivateFn = (
 ) => {
   return inject(AuthenticationGuard).isAuthenticated(route, state);
 };
-export const DASHBOARD_ROUTES: Routes = [
+export const POST_ROUTES: Routes = [
   {
     path: '',
-    providers: [AuthenticationGuard],
+    providers: [AuthenticationGuard, PostsService],
     canActivate: [canActivate],
     canActivateChild: [canActivate],
     data: {
       roles: ['ADMIN'],
     },
-    component: DashboardRouter,
+    component: PostRouter,
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./dashboard/dashboard.component').then(
-            (c) => c.DashboardComponent
+          import('./post-list/post-list.component').then(
+            (c) => c.PostListComponent
           ),
       },
       {
-        path: 'posts',
-        loadChildren: () =>
-          import('./posts/post.routes').then((c) => c.POST_ROUTES),
-      },
-      {
-        path: 'posts/new',
+        path: ':id',
         loadComponent: () =>
-          import('./posts/post-create/post-create.component').then(
-            (c) => c.PostCreateComponent
+          import('./post-detail/post-detail.component').then(
+            (c) => c.PostDetailComponent
           ),
       },
     ],

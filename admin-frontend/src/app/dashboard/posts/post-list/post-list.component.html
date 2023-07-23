@@ -1,0 +1,6 @@
+
+<mat-card *ngFor="let post of posts" [routerLink]="[post.id]">
+  <mat-card-content>
+    <mat-card-title>{{post.title}}</mat-card-title>
+  </mat-card-content>
+</mat-card>

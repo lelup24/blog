@@ -66,5 +66,5 @@ $admin-frontend-orange-theme: mat.define-light-theme(
 );
 
 .orange-theme {
-  @include mat.all-component-colors($admin-frontend-orange-theme);
+  @include mat.all-component-themes($admin-frontend-orange-theme);
 }
