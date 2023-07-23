@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, take } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { PostDetail, PostsService } from '../posts.service';
 import { MatCardModule } from '@angular/material/card';
 
@@ -16,17 +16,19 @@ export class PostDetailComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   postsService = inject(PostsService);
 
-  postDetail!: Observable<PostDetail>;
+  postDetail!: PostDetail;
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      if (!params.has('id')) {
-        return;
-      }
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          if (!params.has('id')) {
+            return of();
+          }
 
-      this.postDetail = this.postsService
-        .fetchPost(params.get('id')!)
-        .pipe(take(1));
-    });
+          return this.postsService.fetchPost(params.get('id')!);
+        })
+      )
+      .subscribe((postDetail) => (this.postDetail = postDetail));
   }
 }

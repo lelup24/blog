@@ -37,13 +37,6 @@ export const DASHBOARD_ROUTES: Routes = [
         loadChildren: () =>
           import('./posts/post.routes').then((c) => c.POST_ROUTES),
       },
-      {
-        path: 'posts/new',
-        loadComponent: () =>
-          import('./posts/post-create/post-create.component').then(
-            (c) => c.PostCreateComponent
-          ),
-      },
     ],
   },
 ];

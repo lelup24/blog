@@ -6,7 +6,6 @@ import {
 } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthenticationGuard } from '../../authentication/authentication.guard';
-import { PostRouter } from './posts-router.component';
 import { PostsService } from './posts.service';
 
 const canActivate: CanActivateFn = (
@@ -24,7 +23,6 @@ export const POST_ROUTES: Routes = [
     data: {
       roles: ['ADMIN'],
     },
-    component: PostRouter,
     children: [
       {
         path: '',
